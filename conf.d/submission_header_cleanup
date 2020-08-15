@@ -1,0 +1,11 @@
+/^Received:/                   IGNORE
+/^Received:.*with ESMTPSA/      IGNORE
+/^Received:.*LMTP id/          IGNORE
+/^Received:.*localhost*/        IGNORE
+/^Delivered-To:/                IGNORE
+/^X-Originating-IP:/            IGNORE
+/^X-Mailer:/                    IGNORE
+/^User-Agent:/                  IGNORE
+/^X-Gmail-Fetch-Info:/          IGNORE
+/^X-Spamd-Result:/              IGNORE
+/^Mime-Version:(.*)$/           REPLACE MIME-Version: $1
