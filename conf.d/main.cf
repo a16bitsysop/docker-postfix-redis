@@ -4,6 +4,7 @@
 #debug_peer_list = 127.0.0.1
 maillog_file = /dev/stdout
 mynetworks_style = subnet
+#mynetworks = 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
 inet_interfaces = all
 inet_protocols = ipv4
 mydomain = $myhostname
@@ -38,7 +39,9 @@ smtpd_tls_ciphers = high
 smtpd_tls_exclude_ciphers = $smtp_tls_exclude_ciphers
 smtpd_tls_mandatory_exclude_ciphers = $smtp_tls_exclude_ciphers
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
-smtpd_tls_chain_files = $config_directory/dh3072.pem, $config_directory/dh4096.pem
+#smtpd_tls_chain_files = $config_directory/dh3072.pem, $config_directory/dh4096.pem
+smtpd_tls_dh1024_param_file = ${config_directory}/dh4096.pem
+smtpd_tls_dh512_param_file = ${config_directory}/dh3072.pem
 
 ##
 ## Spam filter and DKIM signatures via Rspamd
@@ -56,11 +59,11 @@ smtpd_relay_restrictions =  reject_non_fqdn_recipient
 
 ### Conditions in which Postfix accepts e-mails as recipient (additional to relay conditions)
 ### check_recipient_access checks if an account is "sendonly"
-smtpd_recipient_restrictions = check_recipient_access hash:$config_directory/recipient_access
+smtpd_recipient_restrictions = check_recipient_access redis:$config_directory/redis-recipient-access.cf
 
 ### Restrictions for all sending foreign servers ("SMTP clients")
 smtpd_client_restrictions = permit_mynetworks
-                            check_client_access hash:$config_directory/without_ptr
+                            check_client_access redis:$config_directory/redis-without-ptr.cf
                             reject_unknown_client_hostname
 
 ### Foreign mail servers must present a valid "HELO"
@@ -86,9 +89,9 @@ mua_client_restrictions = permit_mynetworks,permit_sasl_authenticated,reject
 ## Virtual Mailboxes
 ##
 
-virtual_mailbox_domains = redis:/etc/postfix/redis-vdomains.cf
-virtual_mailbox_maps = redis:/etc/postfix/redis-vmailbox-maps.cf
-virtual_alias_maps = redis:/etc/postfix/redis-valias-maps.cf
+virtual_mailbox_domains = redis:$config_directory/redis-vdomains.cf
+virtual_mailbox_maps = redis:$config_directory/redis-vmailbox-maps.cf
+virtual_alias_maps = redis:$config_directory/redis-valias-maps.cf
 
 ##
 ## Miscellaneous
@@ -123,7 +126,7 @@ alias_database = hash:/etc/aliases
 ##
 ## Postscreen Filter
 ##
-postscreen_access_list = permit_mynetworks, redis:/etc/postfix/redis-postscreen.cf
+postscreen_access_list = permit_mynetworks, redis:$config_directory/redis-postscreen.cf
 
 postscreen_greet_action = enforce
 

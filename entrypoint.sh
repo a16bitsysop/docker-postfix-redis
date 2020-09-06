@@ -1,25 +1,21 @@
 #!/bin/sh
 #display environment variables passed with --env
 echo '$REDIS=' $REDIS
-echo '$HOSTNAME=' $HOSTANAME
+echo '$HOSTNAME=' $HOSTNAME
 echo '$DOMAIN=' $DOMAIN
 echo '$LETSENCRYPT=' $LETSENCRYPT
 echo '$POSTMASTER=' $POSTMASTER
 echo '$RSPAMD=' $RSPAMD
 echo '$DOVECOT=' $DOVECOT
 
-#NME=postfix-redis
-#set-timezone.sh "$NME"
+NME=postfix-redis
+set-timezone.sh "$NME"
 
 echo "Configuring from environment variables"
 
 if [ -n "$REDIS" ]; then
   REDISIP=$(ping -c1 $REDIS | head -n1 | cut -f2 -d'(' | cut -f1 -d')')
-  sed -e "s+host =.*+host = "$REDISIP"+g" -i /etc/postfix/redis-vdomains.cf
-  sed -e "s+host =.*+host = "$REDISIP"+g" -i /etc/postfix/redis-vmailbox-maps.cf
-  sed -e "s+host =.*+host = "$REDISIP"+g" -i /etc/postfix/redis-valias-maps.cf
-  sed -e "s+host =.*+host = "$REDISIP"+g" -i /etc/postfix/redis-alias.cf
-  sed -e "s+host =.*+host = "$REDISIP"+g" -i /etc/postfix/redis-postscreen.cf
+  find /etc/postfix/redis-*.cf -maxdepth 0 -type f -exec sed -e "s+host =.*+host = "$REDISIP"+g" -i '{}' \;
 fi
 
 if [ -n "$DOMAIN" ]; then
@@ -47,5 +43,9 @@ fi
 [ -n "$DOVECOT" ] && postconf -e "virtual_transport = lmtp:inet:$DOVECOT"
 
 newaliases
+
+#DNSIP=$(ping -c1 unbound-swarm | head -n1 | cut -f2 -d'(' | cut -f1 -d')')
+#cp /etc/resolv.conf /etc/resolv.conf.save
+#echo "nameserver $DNSIP" > /etc/resolv.conf
 
 /usr/sbin/postfix start-fg

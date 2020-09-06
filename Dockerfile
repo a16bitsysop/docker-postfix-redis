@@ -2,8 +2,9 @@ FROM alpine:3.12
 LABEL maintainer "Duncan Bellamy <dunk@denkimushi.com>"
 
 COPY packages /tmp/
-RUN echo '/tmp/working' >> /etc/apk/repositories \
-&& apk add --allow-untrusted ca-certificates openssl postfix postfix-redis \
+RUN sed -i -e 's/v[[:digit:]]\..*\//edge\//g' /etc/apk/repositories \ 
+&& echo '/tmp/working' >> /etc/apk/repositories \
+&& apk add --no-cache --allow-untrusted ca-certificates openssl postfix postfix-redis \
 && rm -rf /tmp/*
 
 WORKDIR /etc/postfix
@@ -13,7 +14,7 @@ WORKDIR /etc
 COPY aliases .
 
 WORKDIR /usr/local/bin
-COPY entrypoint.sh ./
+COPY travis-helpers/set-timezone.sh entrypoint.sh ./
 ENTRYPOINT [ "entrypoint.sh" ]
 
 EXPOSE 25 587
