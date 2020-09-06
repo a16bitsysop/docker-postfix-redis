@@ -7,7 +7,7 @@ echo '$LETSENCRYPT=' $LETSENCRYPT
 echo '$POSTMASTER=' $POSTMASTER
 echo '$RSPAMD=' $RSPAMD
 echo '$DOVECOT=' $DOVECOT
-
+echo '$DNSNAME=' $DNSNAME
 NME=postfix-redis
 set-timezone.sh "$NME"
 
@@ -40,12 +40,20 @@ if [ -n "$RSPAMD" ]; then
   postconf -e "non_smtpd_milters = inet:$RSPAMDIP:11332"
 fi
 
-[ -n "$DOVECOT" ] && postconf -e "virtual_transport = lmtp:inet:$DOVECOT"
+if [ -n "$DOVECOT" ]; then
+  DOVEIP=$(ping -c1 $DOVECOT | head -n1 | cut -f2 -d'(' | cut -f1 -d')')
+  postconf -e "virtual_transport = lmtp:inet:$DOVEIP"
+fi
 
 newaliases
 
-#DNSIP=$(ping -c1 unbound-swarm | head -n1 | cut -f2 -d'(' | cut -f1 -d')')
-#cp /etc/resolv.conf /etc/resolv.conf.save
-#echo "nameserver $DNSIP" > /etc/resolv.conf
+chown -R postfix:postfix /var/lib/postfix
+
+if [ -n "$DNSNAME" ]; then
+  cp /etc/resolv.conf /etc/resolv.conf.save
+  DNSIP=$(ping -c1 $DNSNAME | head -n1 | cut -f2 -d'(' | cut -f1 -d')')
+  echo "nameserver 127.0.0.1" > /etc/resolv.conf
+  dnsmasq --no-resolv --server=$DNSIP
+fi
 
 /usr/sbin/postfix start-fg
