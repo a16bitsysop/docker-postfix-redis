@@ -4,14 +4,13 @@ LABEL maintainer "Duncan Bellamy <dunk@denkimushi.com>"
 COPY packages /tmp/
 RUN sed -i -e 's/v[[:digit:]]\..*\//edge\//g' /etc/apk/repositories \ 
 && echo '/tmp/working' >> /etc/apk/repositories \
-&& apk add --no-cache --allow-untrusted ca-certificates openssl postfix postfix-redis dnsmasq-dnssec \
+&& apk add --no-cache --allow-untrusted ca-certificates openssl postfix postfix-redis \
+&& mkdir /var/spool/postfix/etc \
+&& cp  /etc/services /var/spool/postfix/etc/services \
 && rm -rf /tmp/*
 
 WORKDIR /etc/postfix
 COPY conf.d/* ./
-
-WORKDIR /etc
-COPY aliases dnsmasq.conf ./
 
 WORKDIR /usr/local/bin
 COPY travis-helpers/set-timezone.sh entrypoint.sh ./

@@ -42,6 +42,7 @@ smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 #smtpd_tls_chain_files = $config_directory/dh3072.pem, $config_directory/dh4096.pem
 smtpd_tls_dh1024_param_file = ${config_directory}/dh4096.pem
 smtpd_tls_dh512_param_file = ${config_directory}/dh3072.pem
+smtpd_sasl_type = dovecot
 
 ##
 ## Spam filter and DKIM signatures via Rspamd
@@ -76,6 +77,8 @@ smtpd_helo_restrictions =   permit_mynetworks
 # Block clients, which start sending too early
 smtpd_data_restrictions = reject_unauth_pipelining
 
+# Lmtp
+lmtp_use_tls = yes
 
 ##
 ## Restrictions for MUAs (Mail user agents)
