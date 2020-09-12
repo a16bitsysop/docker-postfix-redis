@@ -70,6 +70,7 @@ smtpd_client_restrictions = permit_mynetworks
 ### Foreign mail servers must present a valid "HELO"
 smtpd_helo_required = yes
 smtpd_helo_restrictions =   permit_mynetworks
+                            check_helo_access redis:$config_directory/redis-helo.cf
                             reject_invalid_helo_hostname
                             reject_non_fqdn_helo_hostname
                             reject_unknown_helo_hostname

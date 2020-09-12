@@ -30,8 +30,11 @@ if [ -n "$HOSTNAME" ]; then
   fi
 fi
 
+echo "postmaster:    root" > /etc/aliases
+
 if [ -n "$POSTMASTER" ]; then
-  sed -i "s+root:.*+root: $POSTMASTER+g" /etc/aliases
+#  sed -i "s+root:.*+root: $POSTMASTER+g" /etc/aliases
+  echo "root:    $POSTMASTER" >> /etc/aliases
 fi
 
 if [ -n "$RSPAMD" ]; then
@@ -48,16 +51,10 @@ fi
 
 newaliases
 
-chown -R postfix:postfix /var/lib/postfix
-
-#if [ -n "$DNSNAME" ]; then
-#  cp /etc/resolv.conf /etc/resolv.conf.save
-#  DNSIP=$(ping -c1 $DNSNAME | head -n1 | cut -f2 -d'(' | cut -f1 -d')')
-#  echo "nameserver 127.0.0.1" > /etc/resolv.conf
-#  dnsmasq --no-resolv --server=$DNSIP
-#fi
+#chown -R postfix:postfix /var/lib/postfix
 
 cp /etc/resolv.conf /var/spool/postfix/etc/
 [ -f /etc/localtime ] && cp /etc/localtime /var/spool/postfix/etc/
 
-/usr/sbin/postfix start-fg
+postfix set-permissions
+postfix start-fg
