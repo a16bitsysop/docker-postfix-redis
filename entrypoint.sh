@@ -4,10 +4,8 @@ echo '$REDIS=' $REDIS
 echo '$HOSTNAME=' $HOSTNAME
 echo '$DOMAIN=' $DOMAIN
 echo '$LETSENCRYPT=' $LETSENCRYPT
-echo '$POSTMASTER=' $POSTMASTER
 echo '$RSPAMD=' $RSPAMD
 echo '$DOVECOT=' $DOVECOT
-#echo '$DNSNAME=' $DNSNAME
 NME=postfix-redis
 set-timezone.sh "$NME"
 
@@ -30,13 +28,6 @@ if [ -n "$HOSTNAME" ]; then
   fi
 fi
 
-echo "postmaster:    root" > /etc/aliases
-
-if [ -n "$POSTMASTER" ]; then
-#  sed -i "s+root:.*+root: $POSTMASTER+g" /etc/aliases
-  echo "root:    $POSTMASTER" >> /etc/aliases
-fi
-
 if [ -n "$RSPAMD" ]; then
   RSPAMDIP=$(ping -c1 $RSPAMD | head -n1 | cut -f2 -d'(' | cut -f1 -d')')
   postconf -e "smtpd_milters = inet:$RSPAMDIP:11332"
@@ -48,10 +39,6 @@ if [ -n "$DOVECOT" ]; then
   postconf -e "virtual_transport = lmtp:inet:$DOVEIP"
   sed -i "s+.*smtpd_sasl_path.*+  -o smtpd_sasl_path=inet:$DOVEIP:11330+g" /etc/postfix/master.cf
 fi
-
-newaliases
-
-#chown -R postfix:postfix /var/lib/postfix
 
 cp /etc/resolv.conf /var/spool/postfix/etc/
 [ -f /etc/localtime ] && cp /etc/localtime /var/spool/postfix/etc/
