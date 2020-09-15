@@ -3,7 +3,7 @@
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=postfix
 pkgver=3.5.7
-pkgrel=2
+pkgrel=3
 pkgdesc="Secure and fast drop-in replacement for Sendmail (MTA)"
 url="http://www.postfix.org/"
 arch="all"
@@ -30,7 +30,6 @@ subpackages="
 	$pkgname-doc
 	$pkgname-openrc
 	$pkgname-ldap:_mv_dict
-	$pkgname-lmdb:_mv_dict
 	$pkgname-mysql:_mv_dict
 	$pkgname-pcre:_mv_dict
 	$pkgname-pgsql:_mv_dict
@@ -49,6 +48,7 @@ source="https://de.postfix.org/ftpmirror/official/postfix-$pkgver.tar.gz
 	dict_redis.c
 	dict_redis.h
 	postfix-redis.patch
+	nodb.patch
 	"
 
 _shared_libs() {
@@ -105,10 +105,11 @@ build() {
 	ccargs="$ccargs -DHAS_SQLITE $(pkg-config --cflags sqlite3)"
 
 	# lmdb
-	ccargs="$ccargs -DHAS_LMDB $(pkg-config --cflags lmdb)"
+	ccargs="$ccargs -DHAS_LMDB $(pkg-config --cflags lmdb) -DDEF_DB_TYPE=\\\"lmdb\\\""
 
 	#
 	#	AUXLIBS_CDB="$cdb_libs" \
+
 
 	# compile
 	make DEBUG="" \
@@ -214,4 +215,5 @@ sha512sums="7828210bc9d3eadfd47f1121ae2f7ca057e03391048e8e79fbf2f96f6677f5e17145
 25cd34f23ca909d4e33aaf3239d1e397260abc7796d9a4456dee4f005682fd3a58aab8106126e5218c95bdddae415a3ef7e2223cd3b0d7b1e2bd76158bb7eaf8  postfix-install.patch
 f1f6772c5e581b4678cc7d5d95e6b98f3afa17e76886d2b118e8ef5713211cab225a73d84fb8eaae93eb5447804e298478b314c5aad86888dba9d18f4ced1d8a  dict_redis.c
 32e5084d1fb39efbf29cd5de08eec4c8615d8c9d44be0d345a27e6b2a6a7dca7bd313ba7358c86d5df6ae1555e12391eb5b35502a874e33f261088de2490d136  dict_redis.h
-56119ecf73fc7b8f3b8e206f2eca05dab1fb0752d9c37e804faebe5fcfa7feca49b8da871ffc9c7f6a247107fef854e09eaf72fc55cea3ca02960db3f8b13c95  postfix-redis.patch"
+56119ecf73fc7b8f3b8e206f2eca05dab1fb0752d9c37e804faebe5fcfa7feca49b8da871ffc9c7f6a247107fef854e09eaf72fc55cea3ca02960db3f8b13c95  postfix-redis.patch
+597654a5eb2c8d8dd141529352865d2a8decf4fc78bd5e5ef1a12fd09ea0593e8b1653e7d923214adfd50f36fc43e2643f1185a261bf92b70ad2d912381002bb  nodb.patch"
