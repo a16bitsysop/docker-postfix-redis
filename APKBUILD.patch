@@ -1,0 +1,54 @@
+diff -Nurp a/APKBUILD b/APKBUILD
+--- a/APKBUILD	2020-09-26 19:17:27.472341689 +0100
++++ b/APKBUILD	2020-09-26 19:26:25.466568904 +0100
+@@ -22,6 +22,7 @@ makedepends="
+ 	perl
+ 	postgresql-dev
+ 	sqlite-dev
++	hiredis-dev
+ 	"
+ 
+ install="$pkgname.pre-install"
+@@ -33,6 +34,7 @@ subpackages="
+ 	$pkgname-pcre:_mv_dict
+ 	$pkgname-pgsql:_mv_dict
+ 	$pkgname-sqlite:_mv_dict
++	$pkgname-redis:_mv_dict
+ 	$pkgname-stone
+ 	"
+ 
+@@ -44,6 +46,7 @@ source="https://de.postfix.org/ftpmirror
+ 	postfix-musl-2.patch
+ 	postfix-install.patch
+ 	lmdb-default.patch
++	postfix3.5-redis.patch
+ 	"
+ 
+ _shared_libs() {
+@@ -97,6 +100,9 @@ build() {
+ 	# lmdb (make it default)
+ 	ccargs="$ccargs -DHAS_LMDB $(pkg-config --cflags lmdb) -DDEF_DB_TYPE=\\\"lmdb\\\""
+ 
++	# redis
++	ccargs="$ccargs -DHAS_REDIS $(pkg-config --cflags hiredis)"
++
+ 	#
+ 	#	AUXLIBS_CDB="$cdb_libs" \
+ 
+@@ -111,6 +117,7 @@ build() {
+ 		AUXLIBS_PGSQL="$(pkg-config --libs libpq)" \
+ 		AUXLIBS_SQLITE="$(pkg-config --libs sqlite3)" \
+ 		AUXLIBS_LMDB="$(pkg-config --libs lmdb)" \
++		AUXLIBS_REDIS="$(pkg-config --libs hiredis)" \
+ 		config_directory=/etc/postfix \
+ 		meta_directory=/etc/postfix \
+ 		daemon_directory=/usr/libexec/postfix \
+@@ -161,7 +168,7 @@ package() {
+ 		"$pkgdir"/var/spool/postfix/public
+ 
+ 	cd "$pkgdir"/etc/postfix/
+-	for map in ldap mysql pcre pgsql sqlite lmdb; do
++	for map in ldap mysql pcre pgsql sqlite lmdb redis; do
+ 		msg "split $map"
+ 		_mvline "^\s*$map" "$map" dynamicmaps.cf
+ 	done

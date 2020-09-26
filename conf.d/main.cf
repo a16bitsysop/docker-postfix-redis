@@ -119,8 +119,8 @@ disable_vrfy_command = yes
 strict_rfc821_envelopes = yes
 # don't give any helpful info when a mailbox doesn't exist
 show_user_unknown_table_name = no
-# fresh installs.
-compatibility_level = 2
+# change to 2 to check for warnings
+compatibility_level = 3
 
 unknown_local_recipient_reject_code = 550
 

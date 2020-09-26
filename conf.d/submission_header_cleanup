@@ -1,6 +1,6 @@
-/^Received:/                   IGNORE
+/^Received:/                    IGNORE
 /^Received:.*with ESMTPSA/      IGNORE
-/^Received:.*LMTP id/          IGNORE
+/^Received:.*LMTP id/           IGNORE
 /^Received:.*localhost*/        IGNORE
 /^Delivered-To:/                IGNORE
 /^X-Originating-IP:/            IGNORE
