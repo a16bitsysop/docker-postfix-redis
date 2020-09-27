@@ -6,6 +6,8 @@ Dockerfile to run [postfix](https://www.postfix.org) as a docker container, redi
 [![](https://images.microbadger.com/badges/version/a16bitsysop/postfix-redis.svg)](https://microbadger.com/images/a16bitsysop/postfix-redis "Get your own version badge on microbadger.com")
 [![](https://images.microbadger.com/badges/commit/a16bitsysop/postfix-redis.svg)](https://microbadger.com/images/a16bitsysop/postfix-redis "Get your own commit badge on microbadger.com")
 
+Compiles postfix-redis (and postfix) during container creation for easy development and testing.
+
 It uses inet lmtp with ssl and auth, for communicating with dovecot instead of sockets as running inside docker network so less dependencies.
 
 ## Postscreen
@@ -93,5 +95,5 @@ Github Repository: [https://github.com/a16bitsysop/docker-postfix-redis](https:/
 ## Examples
 To run connecting to container network exposing ports (accessible from host network), and docker managed volumes.  With ssl certificates mounted into /etc/letsencrypt
 ```
-#docker container run -p 25:25 -p 587:587 --name postfix --restart=unless-stopped --mount source=dovecot-var,target=/var/lib/dovecot --mount source=postfix-var,target=/var/lib/postfix --mount source=ssl-certs,target=/etc/letsencrypt -d a16bitsysop/postfix-redis
+#docker container run -p 25:25 -p 587:587 --name postfix --restart=unless-stopped --mount source=postfix-var,target=/var/lib/postfix --mount source=ssl-certs,target=/etc/letsencrypt -d a16bitsysop/postfix-redis
 ```
