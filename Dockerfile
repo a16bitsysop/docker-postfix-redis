@@ -1,6 +1,6 @@
 FROM alpine:edge as builder
 COPY travis-helpers/build-apk-native.sh APKBUILD.patch /tmp/
-COPY newfiles/* newfiles/*.* /tmp/newfiles/
+COPY newfiles/* /tmp/newfiles/
 RUN cd /tmp \
 && ./build-apk-native.sh main/postfix
 
