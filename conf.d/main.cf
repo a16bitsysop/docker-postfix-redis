@@ -127,7 +127,6 @@ unknown_local_recipient_reject_code = 550
 ##
 ## Postscreen Filter
 ##
-#postscreen_cache_map = lmdb:${data_directory}/postscreen_cache
 postscreen_access_list = permit_mynetworks, redis:${config_directory}/redis-postscreen.cf
 
 postscreen_greet_action = enforce
