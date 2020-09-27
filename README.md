@@ -83,15 +83,15 @@ Github Repository: [https://github.com/a16bitsysop/docker-postfix-redis](https:/
 | NAME        | Description                                                               | Default               |
 | ----------- | ------------------------------------------------------------------------- | --------------------- | 
 | REDIS       | Name/container name or IP of the redis server                             | none                  |
-| HOSTNAME    | Hostname for dovecot to use                                               | none                  |
+| HOSTNAME    | FQDN Hostname for postfix to use (myhostname)                                               | none                  |
 | LETSENCRYPT | Folder name for ssl certs (/etc/letsencrypt/live/$LETSENCRYPT/cert.pem)   | none                  |
-| DOMAIN      | Listen for pop3s on POP3PORT                                                  | do not use this port  |
+| DOMAIN      | FQDN domain for myorigin                                                  | $myhostname  |
 | RSPAMD      | Name/container name or IP of rspamd, for learn ham/spam                   | none                  |
-| DOVECOT     | Name/container name or IP of rspamd, for learn ham/spam                   | none                  |
+| DOVECOT     | Name/container name or IP of dovecot, for email storage and auth                   | none                  |
 | TIMEZONE    | Timezone to use inside the container, eg Europe/London                    | unset                 |
 
 ## Examples
 To run connecting to container network exposing ports (accessible from host network), and docker managed volumes.  With ssl certificates mounted into /etc/letsencrypt
 ```
-#docker container run -p 993:993 -p 995:995 --name dovecot --restart=unless-stopped --mount source=dovecot-var,target=/var/lib/dovecot --mount source=dovecot-mail,target=/var/vmail/mailboxes --mount source=ssl-certs,target=/etc/letsencrypt -d a16bitsysop/dovecot-xapian
+#docker container run -p 25:25 -p 587:587 --name postfix --restart=unless-stopped --mount source=dovecot-var,target=/var/lib/dovecot --mount source=postfix-var,target=/var/lib/postfix --mount source=ssl-certs,target=/etc/letsencrypt -d a16bitsysop/postfix-redis
 ```
