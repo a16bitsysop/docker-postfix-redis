@@ -56,7 +56,7 @@ redis-cli set VALI:sales@example.com "user1@example.com user2@example.com"
 ``` 
 
 ## Recipient access
-Using the prefix ```RECIP``` recipient: resctrictions can be set up as described [here](www.postfix.org/RESTRICTION_CLASS_README.html)
+Using the prefix ```RECIP``` recipient: resctrictions can be set up as described [here](http://www.postfix.org/RESTRICTION_CLASS_README.html)
 
 
 ## Redis Keys
@@ -70,7 +70,7 @@ The following redis keys are used
 | VDOM:example.com             | Virtual domain to accept email for | redis-cli set VDOM:example.com example.com |
 | VALI:user@example.com        | Virtual mailbox alias key, used to check existence and create aliases | redis-cli set VALI:user@example.com user@example.com |
 | VBOX:                        | Optional key for virtual mailbox maps | See [here](http://www.postfix.org/postconf.5.html#virtual_mailbox_maps) |
-| RECIP:                       | Recipent Acess Resctriction | See [here](http://www.postfix.org/RESTRICTION_CLASS_README.html) |
+| RECIP:                       | Optional Recipent Acess Resctriction | See [here](http://www.postfix.org/RESTRICTION_CLASS_README.html) |
 
 ## SSL Certificates
 The path for certificates to be mounted in is: ```/etc/letsencrypt```, the actual certificates should then be in the directory ```live/$LETSENCRYPT```.  This is usually mounted from a letsencrpyt/dnsrobocert container.
