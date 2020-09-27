@@ -89,7 +89,7 @@ Github Repository: [https://github.com/a16bitsysop/docker-postfix-redis](https:/
 | HOSTNAME    | FQDN Hostname for postfix to use (myhostname)                                               | none                  |
 | LETSENCRYPT | Folder name for ssl certs (/etc/letsencrypt/live/$LETSENCRYPT/cert.pem)   | none                  |
 | DOMAIN      | FQDN domain for myorigin                                                  | $myhostname  |
-| RSPAMD      | Name/container name or IP of rspamd, for learn ham/spam                   | none                  |
+| RSPAMD      | Name/container name or IP of rspamd, for spam detection, dkim signing, etc                   | none                  |
 | DOVECOT     | Name/container name or IP of dovecot, for email storage and auth                   | none                  |
 | TIMEZONE    | Timezone to use inside the container, eg Europe/London                    | unset                 |
 
