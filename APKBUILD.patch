@@ -1,6 +1,6 @@
 diff -Nurp a/APKBUILD b/APKBUILD
 --- a/APKBUILD	2020-09-26 19:17:27.472341689 +0100
-+++ b/APKBUILD	2020-09-26 19:26:25.466568904 +0100
++++ b/APKBUILD	2020-09-27 14:55:35.979946513 +0100
 @@ -22,6 +22,7 @@ makedepends="
  	perl
  	postgresql-dev
@@ -17,15 +17,25 @@ diff -Nurp a/APKBUILD b/APKBUILD
  	$pkgname-stone
  	"
  
-@@ -44,6 +46,7 @@ source="https://de.postfix.org/ftpmirror
+@@ -44,6 +46,9 @@ source="https://de.postfix.org/ftpmirror
  	postfix-musl-2.patch
  	postfix-install.patch
  	lmdb-default.patch
-+	postfix3.5-redis.patch
++	postfix-redis.patch
++	dict_redis.c
++	dict_redis.h
  	"
  
  _shared_libs() {
-@@ -97,6 +100,9 @@ build() {
+@@ -58,6 +63,7 @@ prepare() {
+ 		-e "/^#define ALIAS_DB_MAP/s|:/etc/aliases|:/etc/postfix/aliases|" \
+ 		src/util/sys_defs.h
+ 	sed -i -e "s:/usr/local/:/usr/:g" conf/master.cf
++	cp "$srcdir"/dict_redis.* src/global/
+ }
+ 
+ build() {
+@@ -97,6 +103,9 @@ build() {
  	# lmdb (make it default)
  	ccargs="$ccargs -DHAS_LMDB $(pkg-config --cflags lmdb) -DDEF_DB_TYPE=\\\"lmdb\\\""
  
@@ -35,7 +45,7 @@ diff -Nurp a/APKBUILD b/APKBUILD
  	#
  	#	AUXLIBS_CDB="$cdb_libs" \
  
-@@ -111,6 +117,7 @@ build() {
+@@ -111,6 +120,7 @@ build() {
  		AUXLIBS_PGSQL="$(pkg-config --libs libpq)" \
  		AUXLIBS_SQLITE="$(pkg-config --libs sqlite3)" \
  		AUXLIBS_LMDB="$(pkg-config --libs lmdb)" \
@@ -43,7 +53,7 @@ diff -Nurp a/APKBUILD b/APKBUILD
  		config_directory=/etc/postfix \
  		meta_directory=/etc/postfix \
  		daemon_directory=/usr/libexec/postfix \
-@@ -161,7 +168,7 @@ package() {
+@@ -161,7 +171,7 @@ package() {
  		"$pkgdir"/var/spool/postfix/public
  
  	cd "$pkgdir"/etc/postfix/

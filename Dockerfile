@@ -1,6 +1,6 @@
 FROM alpine:edge as builder
 COPY travis-helpers/build-apk-native.sh APKBUILD.patch /tmp/
-COPY newfiles/* /tmp/newfiles/
+COPY newfiles/* newfiles/*.* /tmp/newfiles/
 RUN cd /tmp \
 && ./build-apk-native.sh main/postfix
 
@@ -24,7 +24,7 @@ RUN cp /etc/apk/repositories /etc/apk/repositories.orig \
 WORKDIR /etc/postfix
 COPY conf.d/* ./
 RUN wget https://raw.githubusercontent.com/internetstandards/dhe_groups/master/ffdhe4096.pem \
-&& wget https://raw.githubusercontent.com/internetstandards/dhe_groups/master/ffdhe3072.pem
+&& wget https://raw.githubusercontent.com/internetstandards/dhe_groups/master/ffdhe2048.pem
 
 WORKDIR /usr/local/bin
 COPY travis-helpers/set-timezone.sh entrypoint.sh ./

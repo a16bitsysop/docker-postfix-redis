@@ -39,7 +39,7 @@ smtpd_tls_exclude_ciphers = $smtp_tls_exclude_ciphers
 smtpd_tls_mandatory_exclude_ciphers = $smtp_tls_exclude_ciphers
 smtpd_tls_session_cache_database = lmdb:${data_directory}/smtpd_scache
 smtpd_tls_dh1024_param_file = ${config_directory}/ffdhe4096.pem
-smtpd_tls_dh512_param_file = ${config_directory}/ffdhe3072.pem
+smtpd_tls_dh512_param_file = ${config_directory}/ffdhe2048.pem
 smtpd_sasl_type = dovecot
 #local_recipient_maps = redis:${config_directory}/redis-local-maps.cf
 
