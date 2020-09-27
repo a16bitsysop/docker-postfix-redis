@@ -98,3 +98,6 @@ To run connecting to container network exposing ports (accessible from host netw
 ```
 #docker container run -p 25:25 -p 587:587 --name postfix --restart=unless-stopped --mount source=postfix-var,target=/var/lib/postfix --mount source=ssl-certs,target=/etc/letsencrypt -d a16bitsysop/postfix-redis
 ```
+
+### Sources
+Based on configuration [here](https://thomas-leister.de/en/mailserver-debian-stretch/)
