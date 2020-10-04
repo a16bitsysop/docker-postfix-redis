@@ -15,7 +15,8 @@
 echo "Extracted filenames: $afiles"
 #
 #mkdir -p aport
-cd postfix
+mv postfix aport
+cd aport
 #for afile in $afiles
 #do
 #  echo "Downloading $afile"
