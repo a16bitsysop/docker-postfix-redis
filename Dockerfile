@@ -13,13 +13,15 @@ RUN adduser -D builduser \
 WORKDIR /home/builduser
 RUN cp -a /tmp/* . \
 && pull-patch.sh main/postfix \
-&& chown builduser:builduser aport 
+&& chown builduser:builduser aport \
+&& source aport/APKBUILD \
+&& apk add "$depends $makedepends $checkdepends"
 
 USER builduser
 RUN abuild-keygen -a -i -n \
 && cd aport \
 && abuild checksum \
-&& abuild -r
+&& abuild -d
 
 FROM alpine:3.12
 LABEL maintainer "Duncan Bellamy <dunk@denkimushi.com>"
