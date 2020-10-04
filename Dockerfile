@@ -5,11 +5,11 @@ COPY APKBUILD.patch ./
 COPY newfiles/* ./newfiles/
 
 RUN apk add --update-cache alpine-conf alpine-sdk sudo \
-&& apk upgrade -a \
-&& chmod u+s /usr/bin/sudo
+&& apk upgrade -a
 RUN adduser -D builduser \
-    && addgroup builduser abuild \
-    && echo 'builduser ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+&& addgroup builduser abuild \
+&& echo 'builduser ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+
 WORKDIR /home/builduser
 RUN pull-patch.sh main/postfix \
 && chown builduser:builduser aport 
@@ -19,10 +19,11 @@ RUN abuild-keygen -a -i -n \
 && cd aport \
 && abuild checksum \
 && abuild -r
+
 FROM alpine:3.12
 LABEL maintainer "Duncan Bellamy <dunk@denkimushi.com>"
 
-COPY --from=builder /tmp/packages/* /tmp/packages/
+COPY --from=builder /home/builduser/packages/* /tmp/packages/
 
 RUN cp /etc/apk/repositories /etc/apk/repositories.orig \
 && sed -i -e 's/v[[:digit:]]\..*\//edge\//g' /etc/apk/repositories \
