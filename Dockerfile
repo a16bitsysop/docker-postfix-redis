@@ -1,5 +1,6 @@
 FROM alpine:edge as builder
 
+WORKDIR /tmp
 COPY pull-patch.sh /usr/local/bin
 COPY APKBUILD.patch ./
 COPY newfiles/* ./newfiles/
@@ -11,7 +12,8 @@ RUN adduser -D builduser \
 && echo 'builduser ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
 WORKDIR /home/builduser
-RUN pull-patch.sh main/postfix \
+RUN cp -a /tmp/* . \
+&& pull-patch.sh main/postfix \
 && chown builduser:builduser aport 
 
 USER builduser
