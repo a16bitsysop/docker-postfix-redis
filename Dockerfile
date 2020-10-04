@@ -5,8 +5,7 @@ COPY pull-patch.sh /usr/local/bin
 COPY APKBUILD.patch ./
 COPY newfiles/* ./newfiles/
 COPY postfix/* ./postfix/
-RUN apk add --update-cache alpine-conf alpine-sdk sudo \
-&& apk upgrade -a
+RUN apk add --update-cache alpine-conf alpine-sdk sudo
 RUN adduser -D builduser \
 && addgroup builduser abuild \
 && echo 'builduser ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
