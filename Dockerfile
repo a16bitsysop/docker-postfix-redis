@@ -13,9 +13,7 @@ RUN adduser -D builduser \
 WORKDIR /home/builduser
 RUN cp -a /tmp/* . \
 && pull-patch.sh main/postfix \
-&& chown builduser:builduser aport \
-&& source aport/APKBUILD \
-&& apk add "$depends $makedepends $checkdepends"
+&& chown builduser:builduser aport
 
 USER builduser
 RUN abuild-keygen -a -i -n \
