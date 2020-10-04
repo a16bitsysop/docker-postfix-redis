@@ -4,7 +4,7 @@ WORKDIR /tmp
 COPY pull-patch.sh /usr/local/bin
 COPY APKBUILD.patch ./
 COPY newfiles/* ./newfiles/
-COPT postfix/* ./postfix/
+COPY postfix/* ./postfix/
 RUN apk add --update-cache alpine-conf alpine-sdk sudo \
 && apk upgrade -a
 RUN adduser -D builduser \
