@@ -1,10 +1,24 @@
 FROM alpine:edge as builder
-COPY travis-helpers/build-apk-native.sh APKBUILD.patch /tmp/
-COPY newfiles/* /tmp/newfiles/
-RUN cd /tmp \
-&& ./build-apk-native.sh main/postfix
 
+COPY pull-patch.sh /usr/local/bin
+COPY APKBUILD.patch ./
+COPY newfiles/* ./newfiles/
 
+RUN apk add --update-cache alpine-conf alpine-sdk sudo \
+&& apk upgrade -a \
+&& chmod u+s /usr/bin/sudo
+RUN adduser -D builduser \
+    && addgroup builduser abuild \
+    && echo 'builduser ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+WORKDIR /home/builduser
+RUN pull-patch.sh main/postfix \
+&& chown builduser:builduser aport 
+
+USER builduser
+RUN abuild-keygen -a -i -n \
+&& cd aport \
+&& abuild checksum \
+&& abuild -r
 FROM alpine:3.12
 LABEL maintainer "Duncan Bellamy <dunk@denkimushi.com>"
 
