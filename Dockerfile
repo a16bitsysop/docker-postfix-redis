@@ -1,4 +1,4 @@
-FROM alpine:edge as builder
+FROM alpine:3.12 as builder
 
 WORKDIR /tmp
 COPY pull-patch.sh /usr/local/bin
@@ -27,7 +27,6 @@ LABEL maintainer "Duncan Bellamy <dunk@denkimushi.com>"
 COPY --from=builder /home/builduser/packages/* /tmp/packages/
 
 RUN cp /etc/apk/repositories /etc/apk/repositories.orig \
-&& sed -i -e 's/v[[:digit:]]\..*\//edge\//g' /etc/apk/repositories \
 && echo '/tmp/packages' >> /etc/apk/repositories \
 && chown -R root:root /tmp/packages \
 && apk add --no-cache --allow-untrusted ca-certificates openssl postfix postfix-redis \
