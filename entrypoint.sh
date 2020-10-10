@@ -1,7 +1,7 @@
 #!/bin/sh
 #display environment variables passed with --env
 RSPAMD="$RSPAMD"
-HOSTNAME="$HOSTANME"
+HOSTNAME="$HOSTNAME"
 echo "\$REDIS= $REDIS"
 echo "\$HOSTNAME= $HOSTNAME"
 echo "\$DOMAIN= $DOMAIN"
