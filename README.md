@@ -12,7 +12,7 @@ It uses inet lmtp with ssl and auth, for communicating with dovecot instead of s
 
 ## Postscreen
 Postscreen is configured to reduce load of spammers and bots on the mailserver, ip addresses can bypass postscreen by adding a relevant redis key to the redis container (a seperate redis container for rspamd is needed) eg to allow local lan traffic to bypass postscreen:
-```redis-cli add PSA:192.168.0.0/24 permit``` 
+```redis-cli add PSA:192.168.0.0/24 permit```
 
 To block an unwanted ip:
 ```redis-cli add PSA:8.8.8.8 reject```
@@ -44,7 +44,7 @@ virtual_alias_maps = redis:${config_directory}/redis-valias-maps.cf     #VALI
 
 The VDOM prefix is used for virtual domains to accept email for
 ```redis-cli set VDOM:example.com example.com```
- 
+
 The VBOX prefix/key is optional, see [here](http://www.postfix.org/postconf.5.html#virtual_mailbox_maps)
 
 The VALI prefix is used to check a user exists, and setup aliases:
@@ -76,7 +76,7 @@ The following redis keys are used
 The path for certificates to be mounted in is: ```/etc/letsencrypt```, the actual certificates should then be in the directory ```live/$LETSENCRYPT```.  This is usually mounted from a letsencrpyt/dnsrobocert container.
 
 ## Security
-Postfix has its own rate limiting for failed emails, for extra security with firewalling use syslog-ng on the docker host and set the docker logging to journald so logs can be parsed by a service like fail2ban 
+Postfix has its own rate limiting for failed emails, for extra security with firewalling use syslog-ng on the docker host and set the docker logging to journald so logs can be parsed by a service like fail2ban
 
 ## Github
 Github Repository: [https://github.com/a16bitsysop/docker-postfix-redis](https://github.com/a16bitsysop/docker-postfix-redis)
@@ -84,7 +84,7 @@ Github Repository: [https://github.com/a16bitsysop/docker-postfix-redis](https:/
 ## Environment Variables
 
 | NAME        | Description                                                               | Default               |
-| ----------- | ------------------------------------------------------------------------- | --------------------- | 
+| ----------- | ------------------------------------------------------------------------- | --------------------- |
 | REDIS       | Name/container name or IP of the redis server                             | none                  |
 | HOSTNAME    | FQDN Hostname for postfix to use (myhostname)                                               | none                  |
 | LETSENCRYPT | Folder name for ssl certs (/etc/letsencrypt/live/$LETSENCRYPT/cert.pem)   | none                  |
