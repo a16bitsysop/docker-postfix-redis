@@ -5,6 +5,7 @@ Dockerfile to run [postfix](https://www.postfix.org) as a docker container, redi
 [![Docker Stars](https://img.shields.io/docker/stars/a16bitsysop/postfix-redis.svg?style=flat-square)](https://hub.docker.com/r/a16bitsysop/postfix-redis/)
 [![Version](https://images.microbadger.com/badges/version/a16bitsysop/postfix-redis.svg)](https://microbadger.com/images/a16bitsysop/postfix-redis "Get your own version badge on microbadger.com")
 [![Commit](https://images.microbadger.com/badges/commit/a16bitsysop/postfix-redis.svg)](https://microbadger.com/images/a16bitsysop/postfix-redis "Get your own commit badge on microbadger.com")
+[![GitHub Super-Linter](https://github.com/a16bitsysop/docker-postfix-redis/workflows/Super-Linter/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
 Compiles postfix-redis (and postfix) during container creation for easy development and testing.
 
@@ -53,7 +54,7 @@ redis-cli set VALI:user1@example.com user1@example.com
 redis-cli set VALI:user2@example.com user2@example.com
 redis-cli set VALI:postmaster@example.com user1@example.com
 redis-cli set VALI:sales@example.com "user1@example.com user2@example.com"
-``` 
+```
 
 ## Recipient access
 Using the prefix ```RECIP``` recipient: resctrictions can be set up as described [here](http://www.postfix.org/RESTRICTION_CLASS_README.html)
