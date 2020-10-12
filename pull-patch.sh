@@ -27,12 +27,13 @@ cd aport || exit
 [ -f ../APKBUILD.patch ] && patch -p1 -i ../APKBUILD.patch
 [ -f ../prebuild.sh ] && sh ../prebuild.sh
 [ -d ../newfiles ] && cp ../newfiles/* .
-touch ./APKBUILD
+
+# spellcheck ignore=SC1091
 . ./APKBUILD
 depends="$depends"
 makedepends="$makedepends"
 checkdepends="$checkdepends"
-apk add "$(echo "$depends $makedepends $checkdepends" | xargs)"
+apk add "$(echo "$depends $makedepends $checkdepends sudo" | xargs)"
 #abuild checksum
 
 #echo "Building $tobuild"

@@ -5,7 +5,7 @@ COPY pull-patch.sh /usr/local/bin
 COPY APKBUILD.patch ./
 COPY newfiles/* ./newfiles/
 COPY postfix/* ./postfix/
-RUN apk add --update-cache alpine-conf alpine-sdk sudo
+RUN apk add --update-cache alpine-conf alpine-sdk
 RUN adduser -D builduser \
 && addgroup builduser abuild \
 && echo 'builduser ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
@@ -22,7 +22,7 @@ RUN abuild-keygen -a -i -n \
 && abuild -d
 
 FROM alpine:3.12
-LABEL maintainer "Duncan Bellamy <dunk@denkimushi.com>"
+LABEL maintainer="Duncan Bellamy <dunk@denkimushi.com>"
 
 COPY --from=builder /home/builduser/packages/* /tmp/packages/
 

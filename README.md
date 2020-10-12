@@ -3,8 +3,8 @@ Dockerfile to run [postfix](https://www.postfix.org) as a docker container, redi
 
 [![Docker Pulls](https://img.shields.io/docker/pulls/a16bitsysop/postfix-redis.svg?style=flat-square)](https://hub.docker.com/r/a16bitsysop/postfix-redis/)
 [![Docker Stars](https://img.shields.io/docker/stars/a16bitsysop/postfix-redis.svg?style=flat-square)](https://hub.docker.com/r/a16bitsysop/postfix-redis/)
-[![](https://images.microbadger.com/badges/version/a16bitsysop/postfix-redis.svg)](https://microbadger.com/images/a16bitsysop/postfix-redis "Get your own version badge on microbadger.com")
-[![](https://images.microbadger.com/badges/commit/a16bitsysop/postfix-redis.svg)](https://microbadger.com/images/a16bitsysop/postfix-redis "Get your own commit badge on microbadger.com")
+[![Version](https://images.microbadger.com/badges/version/a16bitsysop/postfix-redis.svg)](https://microbadger.com/images/a16bitsysop/postfix-redis "Get your own version badge on microbadger.com")
+[![Commit](https://images.microbadger.com/badges/commit/a16bitsysop/postfix-redis.svg)](https://microbadger.com/images/a16bitsysop/postfix-redis "Get your own commit badge on microbadger.com")
 
 Compiles postfix-redis (and postfix) during container creation for easy development and testing.
 
@@ -29,14 +29,14 @@ If posfix receives an email from a mailserver that does not have a reverse dns e
 
 ## Helo hostname
 Postfix checks for a valid Helo, an invalid response is rejected, to bypass this check or block a "Helo" use the prefix ```HLO```
-```
+```bash
 redis-cli set HLO:REJECTEDMESSAGE permit
 redis-cli set HLO:mail.spammer.bulk reject
 ```
 
 ## Virtual Mailboxes
 These are configured with the following prefixes/keys:
-```
+```bash
 virtual_mailbox_domains = redis:${config_directory}/redis-vdomains.cf   #VDOM
 virtual_mailbox_maps = redis:${config_directory}/redis-vmailbox-maps.cf #VBOX
 virtual_alias_maps = redis:${config_directory}/redis-valias-maps.cf     #VALI
@@ -48,7 +48,7 @@ The VDOM prefix is used for virtual domains to accept email for
 The VBOX prefix/key is optional, see [here](http://www.postfix.org/postconf.5.html#virtual_mailbox_maps)
 
 The VALI prefix is used to check a user exists, and setup aliases:
-```
+```bash
 redis-cli set VALI:user1@example.com user1@example.com
 redis-cli set VALI:user2@example.com user2@example.com
 redis-cli set VALI:postmaster@example.com user1@example.com
@@ -95,7 +95,7 @@ Github Repository: [https://github.com/a16bitsysop/docker-postfix-redis](https:/
 
 ## Examples
 To run connecting to container network exposing ports (accessible from host network), and docker managed volumes.  With ssl certificates mounted into /etc/letsencrypt
-```
+```bash
 #docker container run -p 25:25 -p 587:587 --name postfix --restart=unless-stopped --mount source=postfix-var,target=/var/lib/postfix --mount source=ssl-certs,target=/etc/letsencrypt -d a16bitsysop/postfix-redis
 ```
 
