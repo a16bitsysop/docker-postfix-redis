@@ -16,10 +16,9 @@ RUN cp -a /tmp/* . \
 && pull-patch.sh main/postfix \
 && chown builduser:builduser aport
 
-# hadolint ignore=DL3003
+WORKDIR /home/builduser/aport
 USER builduser
 RUN abuild-keygen -a -i -n \
-&& cd aport \
 && abuild checksum \
 && abuild -d
 
