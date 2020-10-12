@@ -5,7 +5,8 @@ COPY pull-patch.sh /usr/local/bin
 COPY APKBUILD.patch ./
 COPY newfiles/* ./newfiles/
 COPY postfix/* ./postfix/
-RUN apk add --update-cache alpine-conf alpine-sdk
+# hadolint ignore=DL3018
+RUN apk add --no-cache alpine-conf alpine-sdk
 RUN adduser -D builduser \
 && addgroup builduser abuild \
 && echo 'builduser ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
@@ -15,6 +16,7 @@ RUN cp -a /tmp/* . \
 && pull-patch.sh main/postfix \
 && chown builduser:builduser aport
 
+# hadolint ignore=DL3003
 USER builduser
 RUN abuild-keygen -a -i -n \
 && cd aport \
@@ -26,6 +28,7 @@ LABEL maintainer="Duncan Bellamy <dunk@denkimushi.com>"
 
 COPY --from=builder /home/builduser/packages/* /tmp/packages/
 
+# hadolint ignore=DL3018
 RUN cp /etc/apk/repositories /etc/apk/repositories.orig \
 && echo '/tmp/packages' >> /etc/apk/repositories \
 && chown -R root:root /tmp/packages \
