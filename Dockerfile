@@ -11,7 +11,7 @@ RUN build-apk-native.sh main/postfix
 FROM alpine:3.12
 LABEL maintainer="Duncan Bellamy <dunk@denkimushi.com>"
 
-COPY --from=builder /home/builduser/packages/* /tmp/packages/
+COPY --from=builder /tmp/packages/* /tmp/packages/
 
 # hadolint ignore=DL3018
 RUN cp /etc/apk/repositories /etc/apk/repositories.orig \
