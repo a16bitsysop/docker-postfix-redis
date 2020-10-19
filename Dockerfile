@@ -1,26 +1,12 @@
 FROM alpine:3.12 as builder
 
 WORKDIR /tmp
-COPY pull-patch.sh /usr/local/bin
+COPY travis-helpers/build-apk-native.sh /usr/local/bin
 COPY APKBUILD.patch ./
 COPY newfiles/* ./newfiles/
 COPY postfix/* ./postfix/
-# hadolint ignore=DL3018
-RUN apk add --no-cache alpine-conf alpine-sdk
-RUN adduser -D builduser \
-&& addgroup builduser abuild \
-&& echo 'builduser ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
-WORKDIR /home/builduser
-RUN cp -a /tmp/* . \
-&& pull-patch.sh main/postfix \
-&& chown builduser:builduser aport
-
-WORKDIR /home/builduser/aport
-USER builduser
-RUN abuild-keygen -a -i -n \
-&& abuild checksum \
-&& abuild -d
+RUN build-apk-native.sh main/postfix
 
 FROM alpine:3.12
 LABEL maintainer="Duncan Bellamy <dunk@denkimushi.com>"

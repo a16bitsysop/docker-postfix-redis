@@ -1,0 +1,147 @@
+name: Docker-Build-Push
+
+# Run this workflow every time a new commit pushed to docker-build branch
+on: 
+  push:
+    branches:
+      - docker-build
+
+jobs:
+  # Set the job key. The key is displayed as the job name
+  # when a job name is not provided
+  super-lint:
+    # Name the Job
+    name: Lint code base
+    # Set the type of machine to run on
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks out a copy of your repository on the ubuntu-latest machine
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+
+      # Runs the Super-Linter action
+      - name: Run Super-Linter
+        uses: github/super-linter@v3
+        env:
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build-test:
+    name: Build test image and test
+    runs-on: ubuntu-latest
+    needs: super-lint
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+      -
+        name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          version: latest
+      -
+        name: Setup Docker Cache
+        uses: satackey/action-docker-layer-caching@v0.0.8
+      -
+        name: Build Test Image
+        run: docker buildx build -t testimage --load .
+      -
+        name: Scan Test Iamge
+        uses: Azure/container-scan@v0
+        with:
+          image-name: testimage
+
+  buildx:
+    name: Build and push
+    runs-on: ubuntu-latest
+    needs: build-test
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: all
+      -
+        name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          version: latest
+      -
+        name: Available platforms
+        run: echo ${{ steps.buildx.outputs.platforms }}
+      -
+        name: Setup Docker Cache
+        uses: satackey/action-docker-layer-caching@v0.0.8
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+      -
+        name: Setup Path
+        run: |
+          echo "${GITHUB_WORKSPACE}"/travis-helpers >> $GITHUB_PATH
+          echo "${HOME}"//.local/bin >> $GITHUB_PATH
+      -
+        name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip setuptools wheel
+          python3 -m pip install --upgrade docker natsort bs4
+      -
+        name: Set Environment Variables
+        run: |
+          INFO=README.md
+          if [ -f "$INFO" ]; then
+            echo "Reading $INFO..."
+            NAME=$(head -1 README.md| cut -d' ' -f2)
+            echo "DESC=$(head -2 README.md | tail -n1)" >> $GITHUB_ENV
+          else
+            echo "$INFO not found"
+          fi
+
+          [ $EDGE == "yes" ] && _e="-e"
+          echo APK_VER=$(version.py $_e -a $APK) >> $GITHUB_ENV
+          echo ALP_VER=$(version.py -b) >> $GITHUB_ENV
+      -
+        name: Buildx
+        run: |
+          VER=$APK_VER"-alpine"$ALP_VER
+          echo "Alpine Ver: $ALP_VER"
+          echo "Main Apk: $APK"
+          echo "Apk Ver: $APK_VER"
+          echo "Tag Ver: $VER"
+          echo "Desc: $DESC"
+          docker buildx build \
+            --label "org.label-schema.schema-version=1.0" \
+            --label "org.label-schema.build-date=$(date -u +"%Y-%m-%d %H:%M:%S")" \
+            --label "org.label-schema.version=$VER" \
+            --label "org.label-schema.vcs-ref=$GITHUB_SHA" \
+            --label "org.label-schema.vcs-url=https://github.com/$GITHUB_REPOSITORY" \
+            --label "org.label-schema.name=$NAME" \
+            --label "org.label-schema.version=$APK_VER" \
+            --label "org.label-schema.description=$DESC" \
+            --label "alpine-version=$ALP_VER" \
+            --platform linux/amd64,linux/386,linux/ppc64le,linux/s390x,linux/arm64,linux/arm/v7 \
+            -t "$IMAGE_NAME:$VER" -t "$IMAGE_NAME" \
+            --push .
+    env:
+      IMAGE_NAME: a16bitsysop/postfix-redis
+      APK: postfix
+#     yes to get edge version of APK
+      EDGE: no
+# in github secrets for repo
+#     DOCKER_USERNANE
+#     DOCKER_PASSWORD
