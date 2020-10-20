@@ -123,6 +123,7 @@ jobs:
             echo
             echo
             printf "%b\n" "${yel}  Building for: $PLAT${end}"
+            printf "%b\n" "${yel}  Running on: $(uname -mp)${end}"
             echo
             export DOCKER_CONTENT_TRUST=1 
             docker buildx build \
