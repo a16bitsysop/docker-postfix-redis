@@ -114,13 +114,15 @@ jobs:
       -
         name: Build Layers
         run: |
+          yel='\e[1;33m'
+          end='\e[0m'
           for PLAT in ${PLATS}
           do
             echo
             echo
             echo
             echo
-            echo "  Building for: $PLAT"
+            printf "%b\n" "${yel}  Building for: $PLAT${end}"
             echo
             export DOCKER_CONTENT_TRUST=1 
             docker buildx build \
@@ -156,7 +158,7 @@ jobs:
             -t "$IMAGE_NAME:$VER" -t "$IMAGE_NAME" \
             --push .
     env:
-      PLATS: amd64 386 ppc64le s390x arm64 arm/v7
+      PLATS: 386 amd64 ppc64le s390x arm64 arm/v7
       IMAGE_NAME: a16bitsysop/postfix-redis
       APK: postfix
 #     yes to get edge version of APK
