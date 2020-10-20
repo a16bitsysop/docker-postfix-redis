@@ -158,7 +158,7 @@ jobs:
             -t "$IMAGE_NAME:$VER" -t "$IMAGE_NAME" \
             --push .
     env:
-      PLATS: 386 amd64 ppc64le s390x arm64 arm/v7
+      PLATS: arm64 386 amd64 ppc64le s390x arm/v7
       IMAGE_NAME: a16bitsysop/postfix-redis
       APK: postfix
 #     yes to get edge version of APK
