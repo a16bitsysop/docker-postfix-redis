@@ -4,7 +4,6 @@ WORKDIR /tmp
 COPY travis-helpers/build-apk-native.sh /usr/local/bin
 COPY APKBUILD.patch ./
 COPY newfiles/* ./newfiles/
-COPY postfix/* ./postfix/
 
 RUN build-apk-native.sh main/postfix
 
