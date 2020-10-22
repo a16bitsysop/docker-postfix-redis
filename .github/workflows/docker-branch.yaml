@@ -173,7 +173,7 @@ jobs:
           fi
     env:
       PLATS: linux/386,linux/amd64,linux/ppc64le,linux/s390x,linux/arm/v7,linux/arm64
-      IMAGE_NAME: a16bitsysop/postfix
+      IMAGE_NAME: a16bitsysop/postfix-redis
       APK: postfix
 #     yes to get edge version of APK
       EDGE: no
