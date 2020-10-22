@@ -2,8 +2,8 @@
 # Contributor: Łukasz Jendrysik <scadu@yandex.com>
 # Maintainer: Natanael Copa <ncopa@alpinelinux.org>
 pkgname=postfix
-pkgver=3.5.7
-pkgrel=3
+pkgver=3.6-20200920
+pkgrel=0
 pkgdesc="Secure and fast drop-in replacement for Sendmail (MTA)"
 url="http://www.postfix.org/"
 arch="all"
@@ -33,8 +33,8 @@ subpackages="
 	$pkgname-mysql:_mv_dict
 	$pkgname-pcre:_mv_dict
 	$pkgname-pgsql:_mv_dict
-	$pkgname-redis:_mv_dict
 	$pkgname-sqlite:_mv_dict
+	$pkgname-redis:_mv_dict
 	$pkgname-stone
 	"
 
@@ -45,10 +45,8 @@ source="https://de.postfix.org/ftpmirror/official/postfix-$pkgver.tar.gz
 	$pkgname.initd
 	postfix-musl-2.patch
 	postfix-install.patch
-	dict_redis.c
-	dict_redis.h
+	lmdb-default.patch
 	postfix-redis.patch
-	nodb.patch
 	"
 
 _shared_libs() {
@@ -63,8 +61,6 @@ prepare() {
 		-e "/^#define ALIAS_DB_MAP/s|:/etc/aliases|:/etc/postfix/aliases|" \
 		src/util/sys_defs.h
 	sed -i -e "s:/usr/local/:/usr/:g" conf/master.cf
-	pwd
-	mv "$srcdir"/dict_redis.c "$srcdir"/dict_redis.h src/global/
 }
 
 build() {
@@ -92,9 +88,6 @@ build() {
 	# postgresql
 	ccargs="$ccargs -DHAS_PGSQL $(pkg-config --cflags libpq)"
 
-	# redis
-	ccargs="$ccargs -DHAS_REDIS $(pkg-config --cflags hiredis)"
-
 	# mysql
 	ccargs="$ccargs -DHAS_MYSQL $(mysql_config --include)"
 
@@ -104,12 +97,14 @@ build() {
 	# sqlite
 	ccargs="$ccargs -DHAS_SQLITE $(pkg-config --cflags sqlite3)"
 
-	# lmdb
+	# lmdb (make it default)
 	ccargs="$ccargs -DHAS_LMDB $(pkg-config --cflags lmdb) -DDEF_DB_TYPE=\\\"lmdb\\\""
+
+	# redis
+        ccargs="$ccargs -DHAS_REDIS $(pkg-config --cflags hiredis)"
 
 	#
 	#	AUXLIBS_CDB="$cdb_libs" \
-
 
 	# compile
 	make DEBUG="" \
@@ -120,9 +115,9 @@ build() {
 		AUXLIBS_MYSQL="$(mysql_config --libs)" \
 		AUXLIBS_PCRE="$(pkg-config --libs libpcre)" \
 		AUXLIBS_PGSQL="$(pkg-config --libs libpq)" \
-		AUXLIBS_REDIS="$(pkg-config --libs hiredis)" \
 		AUXLIBS_SQLITE="$(pkg-config --libs sqlite3)" \
 		AUXLIBS_LMDB="$(pkg-config --libs lmdb)" \
+		AUXLIBS_REDIS="$(pkg-config --libs hiredis)" \
 		config_directory=/etc/postfix \
 		meta_directory=/etc/postfix \
 		daemon_directory=/usr/libexec/postfix \
@@ -173,7 +168,7 @@ package() {
 		"$pkgdir"/var/spool/postfix/public
 
 	cd "$pkgdir"/etc/postfix/
-	for map in ldap mysql pcre pgsql redis sqlite lmdb; do
+	for map in ldap mysql pcre pgsql sqlite lmdb redis; do
 		msg "split $map"
 		_mvline "^\s*$map" "$map" dynamicmaps.cf
 	done
@@ -213,7 +208,4 @@ sha512sums="7828210bc9d3eadfd47f1121ae2f7ca057e03391048e8e79fbf2f96f6677f5e17145
 2752e69c4e1857bdcf29444ffb458bca818bc60b9c77c20823c5f5b87c36cb5e0f3217a625a7fe5788d5bfcef7570a1f2149e1233fcd23ccf7ee14190aff47a2  postfix.initd
 7b9d658a6130295b0e0bcf19db064d9daf21a783ef865d83d62eb09176380b7ee5e6a73f6c5ad82f3c1eded1f0c351ed55b203dfffe32c0071e5bb2b16edfeb5  postfix-musl-2.patch
 25cd34f23ca909d4e33aaf3239d1e397260abc7796d9a4456dee4f005682fd3a58aab8106126e5218c95bdddae415a3ef7e2223cd3b0d7b1e2bd76158bb7eaf8  postfix-install.patch
-f1f6772c5e581b4678cc7d5d95e6b98f3afa17e76886d2b118e8ef5713211cab225a73d84fb8eaae93eb5447804e298478b314c5aad86888dba9d18f4ced1d8a  dict_redis.c
-32e5084d1fb39efbf29cd5de08eec4c8615d8c9d44be0d345a27e6b2a6a7dca7bd313ba7358c86d5df6ae1555e12391eb5b35502a874e33f261088de2490d136  dict_redis.h
-56119ecf73fc7b8f3b8e206f2eca05dab1fb0752d9c37e804faebe5fcfa7feca49b8da871ffc9c7f6a247107fef854e09eaf72fc55cea3ca02960db3f8b13c95  postfix-redis.patch
-597654a5eb2c8d8dd141529352865d2a8decf4fc78bd5e5ef1a12fd09ea0593e8b1653e7d923214adfd50f36fc43e2643f1185a261bf92b70ad2d912381002bb  nodb.patch"
+0769e2e503486f8dd6fa21f2c534ad7df7a9f1bb57dde2f0ad61863a3e615d0a6dc18132b27796eb28cd81afb2b4e97c65c9d490a391f835aa3b7b18e74252c5  lmdb-default.patch"
