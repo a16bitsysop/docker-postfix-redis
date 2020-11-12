@@ -1,7 +1,7 @@
 FROM alpine:3.12 as builder
 
 WORKDIR /tmp
-COPY travis-helpers/build-apk-native.sh /usr/local/bin
+COPY travis-helpers/build-apk-native.sh travis-helpers/pull-apk-source.sh /usr/local/bin
 COPY APKBUILD.patch ./
 COPY newfiles/* ./newfiles/
 
