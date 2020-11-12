@@ -16,7 +16,7 @@ COPY --from=builder /tmp/packages/* /tmp/packages/
 RUN cp /etc/apk/repositories /etc/apk/repositories.orig \
 && echo '/tmp/packages' >> /etc/apk/repositories \
 && chown -R root:root /tmp/packages \
-&& apk add --no-cache --allow-untrusted ca-certificates openssl postfix postfix-redis \
+&& apk add --no-cache --allow-untrusted ca-certificates openssl postfix postfix-redis postfix-lmdb \
 && mkdir /var/spool/postfix/etc \
 && cp  /etc/services /var/spool/postfix/etc/services \
 && rm -rf /tmp/* \
