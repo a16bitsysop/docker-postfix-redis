@@ -1,10 +1,10 @@
-FROM alpine:3.12 as builder
+FROM alpine:3.13 as builder
 COPY travis-helpers/build-apk-native.sh APKBUILD.patch /tmp/
 COPY newfiles/* /tmp/newfiles/
 RUN cd /tmp \
 && ./build-apk-native.sh main/postfix
 
-FROM alpine:3.12
+FROM alpine:3.13
 LABEL maintainer "Duncan Bellamy <dunk@denkimushi.com>"
 
 COPY --from=builder /tmp/packages/* /tmp/packages/
@@ -13,7 +13,7 @@ RUN cp /etc/apk/repositories /etc/apk/repositories.orig \
 && sed -i -e 's/v[[:digit:]]\..*\//edge\//g' /etc/apk/repositories \ 
 && echo '/tmp/packages' >> /etc/apk/repositories \
 && chown -R root:root /tmp/packages \
-&& apk add --no-cache --allow-untrusted ca-certificates openssl postfix postfix-redis \
+&& apk add -u --no-cache --allow-untrusted ca-certificates openssl postfix postfix-redis \
 && mkdir /var/spool/postfix/etc \
 && cp  /etc/services /var/spool/postfix/etc/services \
 && rm -rf /tmp/* \
