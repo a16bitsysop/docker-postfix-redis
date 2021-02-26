@@ -31,6 +31,7 @@ smtp_tls_mandatory_exclude_ciphers = $smtp_tls_exclude_ciphers
 smtp_tls_CAfile = ${config_directory}/../ssl/certs/ca-certificates.crt
 
 ### Inbound SMTP connections
+smtpd_tls_received_header = yes
 smtpd_tls_security_level = may
 smtpd_tls_protocols = $smtp_tls_protocols
 smtpd_tls_mandatory_protocols = $smtp_tls_protocols
