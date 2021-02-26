@@ -25,8 +25,7 @@ fi
 if [ -n "$HOSTNAME" ]; then
   postconf -e "myhostname = $HOSTNAME"
   if [ -n "$LETSENCRYPT" ]; then
-    postconf -e "smtpd_tls_cert_file=/etc/letsencrypt/live/$LETSENCRYPT/fullchain.pem"
-    postconf -e "smtpd_tls_key_file=/etc/letsencrypt/live/$LETSENCRYPT/privkey.pem"
+    postconf -e "smtpd_tls_chain_files=/etc/letsencrypt/live/$LETSENCRYPT/privkey.pem, /etc/letsencrypt/live/$LETSENCRYPT/fullchain.pem"
   fi
 fi
 
