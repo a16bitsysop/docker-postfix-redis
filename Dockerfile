@@ -16,7 +16,7 @@ COPY --from=builder /tmp/packages/* /tmp/packages/
 RUN cp /etc/apk/repositories /etc/apk/repositories.orig \
 && echo '/tmp/packages' >> /etc/apk/repositories \
 && chown -R root:root /tmp/packages \
-&& apk add -u --no-cache --allow-untrusted ca-certificates openssl postfix postfix-redis \
+&& apk add -u --no-cache --allow-untrusted ca-certificates openssl postfix postfix-redis stunnel \
 && mkdir /var/spool/postfix/etc \
 && cp  /etc/services /var/spool/postfix/etc/services \
 && rm -rf /tmp/* \
@@ -30,6 +30,8 @@ RUN wget https://raw.githubusercontent.com/internetstandards/dhe_groups/master/f
 
 WORKDIR /usr/local/bin
 COPY travis-helpers/set-timezone.sh entrypoint.sh ./
+COPY stunnel.conf /etc/stunnel/stunnel.conf
+
 ENTRYPOINT [ "entrypoint.sh" ]
 
 EXPOSE 25 587

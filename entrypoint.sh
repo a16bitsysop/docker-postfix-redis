@@ -8,34 +8,48 @@ echo "\$DOMAIN= $DOMAIN"
 echo "\$LETSENCRYPT= $LETSENCRYPT"
 echo "\$RSPAMD= $RSPAMD"
 echo "\$DOVECOT= $DOVECOT"
+echo "\STUNNEL= $STUNNEL"
 NME=postfix-redis
 set-timezone.sh "$NME"
 
 echo "Configuring from environment variables"
 
-if [ -n "$REDIS" ]; then
+if [ -n "$STUNNEL" ]
+then
+	sed -r "s/(connect =\s).*:/\1$REDIS:/" -i /etc/stunnel/stunnel.conf
+	stunnel /etc/stunnel/stunnel.conf
+	REDIS="127.0.0.1"
+fi
+
+if [ -n "$REDIS" ]
+then
   REDISIP=$(ping -c1 "$REDIS" | head -n1 | cut -f2 -d'(' | cut -f1 -d')')
   find /etc/postfix/redis-*.cf -maxdepth 0 -type f -exec sed -e "s+host =.*+host = $REDISIP+g" -i '{}' \;
 fi
 
-if [ -n "$DOMAIN" ]; then
+if [ -n "$DOMAIN" ]
+then
   postconf -e "myorigin = $DOMAIN"
 fi
 
-if [ -n "$HOSTNAME" ]; then
+if [ -n "$HOSTNAME" ]
+then
   postconf -e "myhostname = $HOSTNAME"
-  if [ -n "$LETSENCRYPT" ]; then
+  if [ -n "$LETSENCRYPT" ]
+  then
     postconf -e "smtpd_tls_chain_files=/etc/letsencrypt/live/$LETSENCRYPT/privkey.pem, /etc/letsencrypt/live/$LETSENCRYPT/fullchain.pem"
   fi
 fi
 
-if [ -n "$RSPAMD" ]; then
+if [ -n "$RSPAMD" ]
+then
   RSPAMDIP=$(ping -c1 "$RSPAMD" | head -n1 | cut -f2 -d'(' | cut -f1 -d')')
   postconf -e "smtpd_milters = inet:$RSPAMDIP:11332"
   postconf -e "non_smtpd_milters = inet:$RSPAMDIP:11332"
 fi
 
-if [ -n "$DOVECOT" ]; then
+if [ -n "$DOVECOT" ]
+then
   DOVEIP=$(ping -c1 "$DOVECOT" | head -n1 | cut -f2 -d'(' | cut -f1 -d')')
   postconf -e "virtual_transport = lmtp:inet:$DOVEIP"
   sed -i "s+.*smtpd_sasl_path.*+  -o smtpd_sasl_path=inet:$DOVEIP:11330+g" /etc/postfix/master.cf
