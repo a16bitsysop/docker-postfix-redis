@@ -8,7 +8,7 @@ echo "\$DOMAIN= $DOMAIN"
 echo "\$LETSENCRYPT= $LETSENCRYPT"
 echo "\$RSPAMD= $RSPAMD"
 echo "\$DOVECOT= $DOVECOT"
-echo "\STUNNEL= $STUNNEL"
+echo "\$STUNNEL= $STUNNEL"
 NME=postfix-redis
 set-timezone.sh "$NME"
 
