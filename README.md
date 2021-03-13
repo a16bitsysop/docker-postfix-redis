@@ -73,6 +73,13 @@ The following redis keys are used
 | VBOX:                        | Optional key for virtual mailbox maps | See [here](http://www.postfix.org/postconf.5.html#virtual_mailbox_maps) |
 | RECIP:                       | Optional Recipent Acess Resctriction | See [here](http://www.postfix.org/RESTRICTION_CLASS_README.html) |
 
+## Stunnel
+If the STUNNEL environment variable is set then stunnel will be started to pass
+redis commands over a ssl/tls tunnel.  There needs to be a stunnel server at the
+other end to receive the connection, it is different from redis native ssl support.
+There should also be a file /etc/stunnel/psk.txt with the pre shared key, see
+[here](https://www.stunnel.org/auth.html).
+
 ## SSL Certificates
 The path for certificates to be mounted in is: ```/etc/letsencrypt```, the actual certificates should then be in the directory ```live/$LETSENCRYPT```.  This is usually mounted from a letsencrpyt/dnsrobocert container.
 
@@ -84,15 +91,16 @@ Github Repository: [https://github.com/a16bitsysop/docker-postfix-redis](https:/
 
 ## Environment Variables
 
-| NAME        | Description                                                               | Default               |
-| ----------- | ------------------------------------------------------------------------- | --------------------- |
-| REDIS       | Name/container name or IP of the redis server                             | none                  |
-| HOSTNAME    | FQDN Hostname for postfix to use (myhostname)                                               | none                  |
-| LETSENCRYPT | Folder name for ssl certs (/etc/letsencrypt/live/$LETSENCRYPT/cert.pem)   | none                  |
-| DOMAIN      | FQDN domain for myorigin                                                  | $myhostname  |
-| RSPAMD      | Name/container name or IP of rspamd, for spam detection, dkim signing, etc                   | none                  |
-| DOVECOT     | Name/container name or IP of dovecot, for email storage and auth                   | none                  |
-| TIMEZONE    | Timezone to use inside the container, eg Europe/London                    | unset                 |
+| NAME        | Description                                                                | Default               |
+| ----------- | -------------------------------------------------------------------------- | --------------------- |
+| REDIS       | Name/container name or IP of the redis server                              | none                  |
+| HOSTNAME    | FQDN Hostname for postfix to use (myhostname)                              | none                  |
+| LETSENCRYPT | Folder name for ssl certs (/etc/letsencrypt/live/$LETSENCRYPT/cert.pem)    | none                  |
+| DOMAIN      | FQDN domain for myorigin                                                   | $myhostname           |
+| RSPAMD      | Name/container name or IP of rspamd, for spam detection, dkim signing, etc | none                  |
+| DOVECOT     | Name/container name or IP of dovecot, for email storage and auth           | none                  |
+| STUNNEL     | Use stunnel to encrypt redis traffic on port 6379 if set                   | unset                 |
+| TIMEZONE    | Timezone to use inside the container, eg Europe/London                     | unset                 |
 
 ## Examples
 To run connecting to container network exposing ports (accessible from host network), and docker managed volumes.  With ssl certificates mounted into /etc/letsencrypt
