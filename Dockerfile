@@ -25,8 +25,8 @@ RUN cp /etc/apk/repositories /etc/apk/repositories.orig \
 
 WORKDIR /etc/postfix
 COPY conf.d/* ./
-RUN wget https://raw.githubusercontent.com/internetstandards/dhe_groups/master/ffdhe4096.pem \
-&& wget https://raw.githubusercontent.com/internetstandards/dhe_groups/master/ffdhe2048.pem
+RUN wget -q https://raw.githubusercontent.com/internetstandards/dhe_groups/master/ffdhe4096.pem \
+&& wget -q https://raw.githubusercontent.com/internetstandards/dhe_groups/master/ffdhe2048.pem
 
 WORKDIR /usr/local/bin
 COPY travis-helpers/set-timezone.sh entrypoint.sh ./
