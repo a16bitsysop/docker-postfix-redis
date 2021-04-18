@@ -1,4 +1,5 @@
 #!/bin/sh
+# shellcheck shell=dash
 #display environment variables passed with --env
 RSPAMD="$RSPAMD"
 HOSTNAME="$HOSTNAME"
@@ -15,8 +16,8 @@ set-timezone.sh "$NME"
 echo "Configuring from environment variables"
 
 wait_port() {
-  TL=0
-  INC=3
+  local TL=0
+  local INC=3
   [ -n "$4" ] && INC="$4"
   echo "Waiting for $1"
   while true
