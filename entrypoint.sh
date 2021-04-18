@@ -14,6 +14,21 @@ set-timezone.sh "$NME"
 
 echo "Configuring from environment variables"
 
+wait_port() {
+  local TL=0
+  local INC=3
+  [ -n "$4" ] && INC="$4"
+  echo "Waiting for $1"
+  while true
+  do
+    nc -zv "$2" "$3" && return
+    echo "."
+    TL=$((TL + INC))
+    [ "$TL" -gt 90 ] && return 1
+    sleep "$INC"
+  done
+}
+
 if [ -n "$STUNNEL" ]
 then
 	sed -r "s/(connect =\s).*:/\1$REDIS:/" -i /etc/stunnel/stunnel.conf
@@ -23,6 +38,16 @@ fi
 
 if [ -n "$REDIS" ]
 then
+  echo "Waiting for redis to load database"
+  _ready=""
+  while [ -z "$_ready" ]
+  do
+    sleep 5s
+    _reply=$(echo "PING" | nc "$REDIS" 6379)
+    echo "$_reply"
+    echo "$_reply" | grep "PONG" && _ready="1"
+  done
+
   REDISIP=$(ping -c1 "$REDIS" | head -n1 | cut -f2 -d'(' | cut -f1 -d')')
   find /etc/postfix/redis-*.cf -maxdepth 0 -type f -exec sed -e "s+host =.*+host = $REDISIP+g" -i '{}' \;
 fi
@@ -43,6 +68,7 @@ fi
 
 if [ -n "$RSPAMD" ]
 then
+  wait_port "rspamd" "$RSPAMD" 11332
   RSPAMDIP=$(ping -c1 "$RSPAMD" | head -n1 | cut -f2 -d'(' | cut -f1 -d')')
   postconf -e "smtpd_milters = inet:$RSPAMDIP:11332"
   postconf -e "non_smtpd_milters = inet:$RSPAMDIP:11332"
