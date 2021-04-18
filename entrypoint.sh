@@ -15,8 +15,8 @@ set-timezone.sh "$NME"
 echo "Configuring from environment variables"
 
 wait_port() {
-  local TL=0
-  local INC=3
+  TL=0
+  INC=3
   [ -n "$4" ] && INC="$4"
   echo "Waiting for $1"
   while true
