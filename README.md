@@ -1,10 +1,10 @@
 # docker-postfix-redis
 Dockerfile to run [postfix](https://www.postfix.org) as a docker container, redis is used for table lookups to reduce footprint.
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/a16bitsysop/[nme].svg?style=plastic)](https://hub.docker.com/r/a16bitsysop/[nme]/)
-[![Docker Stars](https://img.shields.io/docker/stars/a16bitsysop/[nme].svg?style=plastic)](https://hub.docker.com/r/a16bitsysop/[nme]/)
-[![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/a16bitsysop/[nme]/latest?style=plastic)](https://hub.docker.com/r/a16bitsysop/[nme]/)
-[![Github SHA](https://img.shields.io/badge/dynamic/json?style=plastic&color=orange&label=Github%20SHA&query=object.sha&url=https%3A%2F%2Fapi.github.com%2Frepos%2Fa16bitsysop%2Fdocker-[nme]%2Fgit%2Frefs%2Fheads%2Fmain)](https://github.com/a16bitsysop/docker-[nme])
+[![Docker Pulls](https://img.shields.io/docker/pulls/a16bitsysop/postfix-redis.svg?style=plastic)](https://hub.docker.com/r/a16bitsysop/postfix-redis/)
+[![Docker Stars](https://img.shields.io/docker/stars/a16bitsysop/postfix-redis.svg?style=plastic)](https://hub.docker.com/r/a16bitsysop/postfix-redis/)
+[![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/a16bitsysop/postfix-redis/latest?style=plastic)](https://hub.docker.com/r/a16bitsysop/postfix-redis/)
+[![Github SHA](https://img.shields.io/badge/dynamic/json?style=plastic&color=orange&label=Github%20SHA&query=object.sha&url=https%3A%2F%2Fapi.github.com%2Frepos%2Fa16bitsysop%2Fdocker-postfix-redis%2Fgit%2Frefs%2Fheads%2Fmain)](https://github.com/a16bitsysop/docker-postfix-redis)
 [![GitHub Super-Linter](https://github.com/a16bitsysop/docker-postfix-redis/workflows/Super-Linter/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
 Compiles postfix-redis (and postfix) during container creation for easy development and testing.
@@ -87,7 +87,7 @@ The path for certificates to be mounted in is: ```/etc/letsencrypt```, the actua
 Postfix has its own rate limiting for failed emails, for extra security with firewalling use syslog-ng on the docker host and set the docker logging to journald so logs can be parsed by a service like fail2ban
 
 ## Github
-Github Repository: [https://github.com/a16bitsysop/docker-[nme]](https://github.com/a16bitsysop/docker-[nme])
+Github Repository: [https://github.com/a16bitsysop/docker-postfix-redis](https://github.com/a16bitsysop/docker-postfix-redis)
 
 ## Environment Variables
 
@@ -110,5 +110,3 @@ To run connecting to container network exposing ports (accessible from host netw
 
 ### Sources
 Based on configuration [here](https://thomas-leister.de/en/mailserver-debian-stretch/)
-
-[nme]: postfix-redis
