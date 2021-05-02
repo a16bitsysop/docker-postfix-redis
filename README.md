@@ -1,10 +1,10 @@
 # docker-postfix-redis
 Dockerfile to run [postfix](https://www.postfix.org) as a docker container, redis is used for table lookups to reduce footprint.
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/a16bitsysop/postfix-redis.svg?style=flat-square)](https://hub.docker.com/r/a16bitsysop/postfix-redis/)
-[![Docker Stars](https://img.shields.io/docker/stars/a16bitsysop/postfix-redis.svg?style=flat-square)](https://hub.docker.com/r/a16bitsysop/postfix-redis/)
-[![Version](https://images.microbadger.com/badges/version/a16bitsysop/postfix-redis.svg)](https://microbadger.com/images/a16bitsysop/postfix-redis "Get your own version badge on microbadger.com")
-[![Commit](https://images.microbadger.com/badges/commit/a16bitsysop/postfix-redis.svg)](https://microbadger.com/images/a16bitsysop/postfix-redis "Get your own commit badge on microbadger.com")
+[![Docker Pulls](https://img.shields.io/docker/pulls/a16bitsysop/postfix-redis.svg?style=plastic)](https://hub.docker.com/r/a16bitsysop/postfix-redis/)
+[![Docker Stars](https://img.shields.io/docker/stars/a16bitsysop/postfix-redis.svg?style=plastic)](https://hub.docker.com/r/a16bitsysop/postfix-redis/)
+[![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/a16bitsysop/postfix-redis/latest?style=plastic)](https://hub.docker.com/r/a16bitsysop/postfix-redis/)
+[![Github SHA](https://img.shields.io/badge/dynamic/json?style=plastic&color=orange&label=Github%20SHA&query=object.sha&url=https%3A%2F%2Fapi.github.com%2Frepos%2Fa16bitsysop%2Fdocker-postfix-redis%2Fgit%2Frefs%2Fheads%2Fmain)](https://github.com/a16bitsysop/docker-postfix-redis)
 [![GitHub Super-Linter](https://github.com/a16bitsysop/docker-postfix-redis/workflows/Super-Linter/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
 Compiles postfix-redis (and postfix) during container creation for easy development and testing.
