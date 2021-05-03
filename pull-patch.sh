@@ -30,9 +30,6 @@ cd aport || exit
 
 # shellcheck disable=SC1091
 . ./APKBUILD
-depends="$depends"
-makedepends="$makedepends"
-checkdepends="$checkdepends"
 apk add --update-cache "$(echo "$depends $makedepends $checkdepends sudo" | xargs)"
 #abuild checksum
 

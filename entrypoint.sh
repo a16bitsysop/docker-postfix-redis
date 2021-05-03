@@ -1,8 +1,6 @@
 #!/bin/sh
 # shellcheck shell=dash
 #display environment variables passed with --env
-RSPAMD="$RSPAMD"
-HOSTNAME="$HOSTNAME"
 echo "\$REDIS= $REDIS"
 echo "\$HOSTNAME= $HOSTNAME"
 echo "\$DOMAIN= $DOMAIN"
