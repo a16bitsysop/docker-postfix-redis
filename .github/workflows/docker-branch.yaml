@@ -44,6 +44,7 @@ jobs:
       - name: Run Super-Linter
         uses: github/super-linter@v4.2.2
         env:
+          VALIDATE_CPP: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
