@@ -1,4 +1,4 @@
-FROM alpine:3.13 as builder
+FROM alpine:3.14 as builder
 
 WORKDIR /tmp
 COPY travis-helpers/build-apk-native.sh travis-helpers/pull-apk-source.sh /usr/local/bin/
