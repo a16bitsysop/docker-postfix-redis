@@ -1,4 +1,5 @@
-FROM alpine:3.14 as builder
+ARG ALPVER=3.14
+FROM alpine:${ALPVER} as builder
 
 WORKDIR /tmp
 COPY travis-helpers/build-apk-native.sh travis-helpers/pull-apk-source.sh /usr/local/bin/
@@ -7,7 +8,7 @@ COPY newfiles/* ./newfiles/
 
 RUN build-apk-native.sh main/postfix
 
-FROM alpine:3.13
+FROM alpine:${ALPVER}
 LABEL maintainer="Duncan Bellamy <dunk@denkimushi.com>"
 
 COPY --from=builder /tmp/packages/* /tmp/packages/
