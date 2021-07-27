@@ -45,6 +45,7 @@ jobs:
         uses: github/super-linter@v4.5.1
         env:
           VALIDATE_CPP: false
+          VALIDATE_CLANG_FORMAT: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
