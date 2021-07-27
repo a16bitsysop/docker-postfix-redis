@@ -42,7 +42,7 @@ jobs:
 
       # Runs the Super-Linter action
       - name: Run Super-Linter
-        uses: github/super-linter@v4.2.2
+        uses: github/super-linter@v4.5.1
         env:
           VALIDATE_CPP: false
           VALIDATE_CLANG_FORMAT: false
@@ -62,7 +62,7 @@ jobs:
       -
         name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v1.3.0
+        uses: docker/setup-buildx-action@v1.5.1
         with:
           version: latest
       -
@@ -134,7 +134,7 @@ jobs:
       -
         name: Set up Docker Buildx
         id: buildx
-        uses: docker/setup-buildx-action@v1.3.0
+        uses: docker/setup-buildx-action@v1.5.1
         with:
           version: latest
       -
@@ -142,7 +142,7 @@ jobs:
         run: echo ${{ steps.buildx.outputs.platforms }}
       -
         name: Login to DockerHub
-        uses: docker/login-action@v1.9.0
+        uses: docker/login-action@v1.10.0
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -162,7 +162,7 @@ jobs:
           echo "Repo: ${{ steps.docklabel.outputs.repo }}"
       -
         name: Build
-        uses: docker/build-push-action@v2.5.0
+        uses: docker/build-push-action@v2.6.1
         with:
           builder: ${{ steps.buildx.outputs.name }}
           context: .
