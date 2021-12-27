@@ -1,6 +1,8 @@
 # docker-postfix-redis
 Dockerfile to run [postfix](https://www.postfix.org) as a docker container, redis is used for table lookups to reduce footprint.
 
+This repository has moved to: https://gitlab.com/container-email/postfix-redis
+
 [![Docker Pulls](https://img.shields.io/docker/pulls/a16bitsysop/postfix-redis.svg?style=plastic)](https://hub.docker.com/r/a16bitsysop/postfix-redis/)
 [![Docker Stars](https://img.shields.io/docker/stars/a16bitsysop/postfix-redis.svg?style=plastic)](https://hub.docker.com/r/a16bitsysop/postfix-redis/)
 [![Docker Image Version (tag latest semver)](https://img.shields.io/docker/v/a16bitsysop/postfix-redis/latest?style=plastic)](https://hub.docker.com/r/a16bitsysop/postfix-redis/)
